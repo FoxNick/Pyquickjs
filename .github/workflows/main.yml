@@ -1,4 +1,4 @@
-name: Build, test, release
+name: Build, release
 
 on:
   push:
@@ -60,7 +60,6 @@ jobs:
           use-pipx: true
           use-specific-python-version: true
           specific-python-version: ${{ matrix.py-version }}
-      - run: make test
       - uses: ./.github/actions/upload-artifacts
         with:
           make-binary: true
@@ -87,7 +86,6 @@ jobs:
           key-base: ${{ matrix.arch }}-py${{ matrix.py-version }}
           use-pipx: false
           use-specific-python-version: false
-      - run: make test
       - uses: ./.github/actions/upload-artifacts
         with:
           make-binary: true
@@ -115,7 +113,6 @@ jobs:
           key-base: ${{ matrix.arch }}-py${{ matrix.py-version }}
           use-pipx: false
           use-specific-python-version: false
-      - run: make test
       - uses: ./.github/actions/upload-artifacts
         with:
           make-binary: true
@@ -173,10 +170,3 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
           packages_dir: dist/artifact/
         if: ${{ fromJSON(needs.pass-env.outputs.is-for-release-str) }}
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.TESTPYPI_API_TOKEN }}
-          packages_dir: dist/artifact/
-          repository_url: https://test.pypi.org/legacy/
-        if: ${{ !fromJSON(needs.pass-env.outputs.is-for-release-str) }}
